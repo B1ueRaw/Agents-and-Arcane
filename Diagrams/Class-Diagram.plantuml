@@ -1,0 +1,107 @@
+@startuml Class Diagram
+
+class Player {
+    - name: String
+    - army: Army
+    + getName(): String
+    + createObject(Recipe): Unit | Equipement
+}
+
+class Spell {
+    - name: String
+    - manaCost: int
+    - damage: int
+    - range: int
+    - AOEType: enum
+    + getName(): String
+    + getManaCost(): int
+    + getDamage(): int
+    + getRange(): int
+}
+
+class Army {
+    - name: String
+    - units: List<Unit>
+    + getName(): String
+    + getUnits(): List<Unit>
+    + addUnit(unit: Unit): void
+    + removeUnit(unit: Unit): void
+}
+
+class Enemy {
+    - name: String
+    - background: String
+    - army: Army
+    + getName(): String
+    + getBackground(): String
+    + getArmy(): Army
+    + setArmy(army: Army): void
+}
+
+class Unit {
+    - name: String
+    - background: String
+    - agentId: int
+    - health: int
+    - traits: List<enum>
+    - equipement: Equipement
+    - battalion: List<Minion>
+    + getName(): String
+    + getHealth(): int
+    + setHealth(health: int): void
+    + getAttackPower(): int
+    + setAttackPower(attackPower: int): void
+}
+
+class Minion {
+    - id: int
+    - health: int
+    - attackPower: int
+    + getId(): String
+    + getHealth(): int
+    + setHealth(health: int): void
+    + getAttackPower(): int
+    + setAttackPower(attackPower: int): void
+}
+
+class Equipement {
+    - name: String
+    - description: String
+    - rarity: enum
+    - value: List<Resource>
+    - unit: Unit | NULL
+    + getName(): String
+    + getUnit(): Unit | NULL
+}
+
+class Class {
+    - name: String
+    - health: int
+    - attackPower: int
+    - weaponType: enum
+    + getName(): String
+    + getHealth(): int
+    + setHealth(health: int): void
+    + getAttackPower(): int
+    + setAttackPower(attackPower: int): void
+}
+
+class Recipe {
+    - id: int
+    - resourceCost: List<Resource>
+    - unit: Unit | NULL
+    - equipement: Equipement | NULL
+}
+
+Player "1" -down- "1" Army : controls >
+Player "1" -- "*" Spell : casts >
+Enemy "1" -right- "1" Army : controls >
+Army "1" -down- "*" Unit : contains >
+Army "1" -- "*" Equipement : contains >
+Unit "1" -- "1" Equipement : has >
+Unit "1" -- "*" Minion
+Unit --> Class : has >
+Recipe -up- "0..1" Unit : creates >
+Recipe -left- "0..1" Equipement : creates >
+
+@enduml

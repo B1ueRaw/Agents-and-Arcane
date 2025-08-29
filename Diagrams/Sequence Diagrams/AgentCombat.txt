@@ -1,0 +1,67 @@
+@startuml
+actor Agent
+database SQL
+database VIEW
+participant Traits
+participant Class
+actor Enemies
+actor Allies
+entity Resources
+participant Tools
+participant Unity
+activate SQL
+activate Agent
+Agent -> SQL : query
+SQL -> VIEW : constrain
+activate VIEW
+VIEW --> Agent : inform
+activate Traits
+Agent -> Traits : inspect traits
+Traits --> Agent : influence decisions
+activate Class
+Agent -> Class : inspect class
+Class -> Tools : Add Class ability
+Class --> Agent : influence decisions
+Agent -> Agent : Query ChatGPT
+loop While Combat
+Agent -> Tools : Invoke
+group Attack
+    Tools -> Enemies : Attack
+    Class -> Enemies : Set Attack Type
+    Traits -> Enemies : Attack Modifiers
+    deactivate Traits
+    Enemies --> Unity : Resolve attack
+    end
+group Class Ability
+    Tools --> Class : reference
+    Tools -> Allies : Buff
+    activate Allies
+    Allies --> Unity : Resolve Buff
+    deactivate Allies
+    Tools -> Enemies : Special Attack
+    Enemies --> Unity : Resolve Special
+    deactivate Class
+    end
+group Gather
+    Tools -> Resources : Gather
+    activate Resources
+    Resources --> Unity : Resolve Gather
+    deactivate Resources
+    Unity --> SQL : Update Gamestate
+    SQL -> VIEW : Update
+    VIEW --> Agent : Update
+    Unity --> Agent : Provide Resource
+    end
+group Message
+    Tools -> Allies : Message
+    activate Allies
+    Allies -> Allies : Process Message
+    Allies --> SQL : Store Reply
+    deactivate Allies
+    SQL -> VIEW : Add Reply
+    VIEW --> Agent : Update
+    end
+end
+deactivate VIEW
+deactivate SQL
+@enduml

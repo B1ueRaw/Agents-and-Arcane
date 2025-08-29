@@ -1,0 +1,22 @@
+@startuml GrabObject
+actor Player
+participant Game
+entity Object
+participant LucidGloves
+
+Player -> Game: Hover over object
+Game -> Object: Check if object is grabbable
+Object -> Game: Confirm object is grabbable
+Game -> Player: Notify object is grabbable
+alt Using VR
+    Player -> Game: Pick up object with (left/right) hand
+    Game -> Player: Place object in (left/right) hand
+    alt Using LucidGloves
+        Player->LucidGloves: Send servo positions to (left/right) hand
+    end
+else
+    Player -> Game: Pick up object
+    Game -> Player: Place object in hand
+end
+Game -> Object: Remove object from world
+@enduml

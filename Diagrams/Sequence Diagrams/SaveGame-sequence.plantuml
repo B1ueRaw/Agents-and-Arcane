@@ -1,0 +1,20 @@
+@startuml SaveGame
+actor Player
+participant Unity
+participant SaveGame
+participant File
+
+Player -> Unity: Save Game
+activate Unity
+Unity -> SaveGame: Save current game
+activate SaveGame
+SaveGame -> Unity: Request player state
+Unity -> SaveGame: Send player state
+SaveGame -> Unity: Request game states
+Unity -> SaveGame: Send game states
+SaveGame -> File: Write encrypted json data
+SaveGame --> Unity: State saved
+deactivate SaveGame
+Unity --> Player: Game saved successfully
+deactivate Unity
+@enduml

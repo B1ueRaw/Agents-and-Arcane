@@ -1,0 +1,31 @@
+@startuml
+participant Openai
+entity Agent
+control Spinlock
+database SQL
+Openai -> Agent : fetch
+activate Agent
+Agent -> Spinlock : start thread
+activate Spinlock
+Spinlock -> Spinlock : join threads
+Spinlock -> SQL : query
+activate SQL
+SQL --> Spinlock : VIEW
+loop During Turn
+    Spinlock -> Tools : invoke
+    Tools -> Unity : report agent decisions
+    activate Unity
+    group Atomic
+        activate Tools
+        Tools -> SQL : modify gamestate
+        deactivate Tools
+        Unity --> SQL : update gamestate
+        deactivate Unity
+        end
+    SQL --> Spinlock : update VIEW
+    deactivate SQL
+end
+Spinlock --> Agent : stop thread
+deactivate Spinlock
+deactivate Agent
+@enduml
